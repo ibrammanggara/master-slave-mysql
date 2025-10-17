@@ -33,3 +33,79 @@ sudo systemctl restart mysql
 ```
 sudo mysql
 ```
+
+### Buat user replikasi:
+
+```
+CREATE USER 'repluser'@'%' IDENTIFIED BY 'repl_password' REQUIRE NONE; GRANT REPLICATION SLAVE ON *.* TO 'repluser'@'%'; FLUSH PRIVILEGES;
+```
+
+### Cek status binary log:
+
+```
+SHOW MASTER STATUS;
+```
+
+### Catat hasilnya(contoh):
+
+```
+File: mysql-bin.000001
+Position:  1481
+```
+
+### 🧭 3. Konfigurasi Slave
+
+### Edit file konfigurasi:
+
+```
+sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+```
+
+### Ubah jadi:
+
+```
+server-id = 2
+relay-log = /var/log/mysql/mysql-relay-bin.log
+```
+
+### Restart MySQL:
+
+```
+sudo systemctl restart mysql
+```
+
+### Masuk MySQL di slave:
+
+```
+sudo mysql
+```
+
+### Hubungkan ke master:
+
+```
+STOP SLAVE;
+CHANGE MASTER TO
+  MASTER_HOST='10.0.0.1',
+  MASTER_USER='repl',
+  MASTER_PASSWORD='passwordku',
+  MASTER_LOG_FILE='mysql-bin.000001',
+  MASTER_LOG_POS=1481;
+START SLAVE;
+```
+
+### ✅ 4. Verifikasi Replikasi
+
+### Cek status di slave:
+
+```
+SHOW SLAVE STATUS\G
+```
+
+### Pastikan berjalan:
+
+```
+Slave_IO_Running: Yes
+Slave_SQL_Running: Yes
+```
+
+### Kalau dua-duanya Yes → berarti replikasi berhasil! 🎉
