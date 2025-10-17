@@ -35,6 +35,7 @@ sudo mysql
 ```
 
 ### Buat user replikasi:
+### note: no ssl require
 
 ```
 CREATE USER 'repluser'@'%' IDENTIFIED BY 'repl_password' REQUIRE NONE; GRANT REPLICATION SLAVE ON *.* TO 'repluser'@'%'; FLUSH PRIVILEGES;
