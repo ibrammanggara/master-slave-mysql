@@ -109,3 +109,21 @@ Slave_SQL_Running: Yes
 ```
 
 ### Kalau dua-duanya Yes → berarti replikasi berhasil! 🎉
+
+
+# failover master ke slave
+
+### Hentikan replikasi:
+
+```
+STOP SLAVE;
+RESET SLAVE ALL;
+```
+
+### Lalu ubah mode menjadi writable:
+
+```
+SET GLOBAL read_only = OFF;
+SET GLOBAL super_read_only = OFF;
+```
+# selesai
